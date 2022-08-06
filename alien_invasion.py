@@ -1,13 +1,13 @@
 # allien invasion Game
 import sys
 import pygame
+import game_function as gf
+
 from pygame.sprite import Group
 from settings import Settings
 from ship import Ship
-import game_function as gf
-
 from alien import Alien
-
+from game_stats import GameStats
 
 def run_game():
     pygame.init()
@@ -21,12 +21,16 @@ def run_game():
     aliens = Group()
     gf.creat_fleet(ai_settings,screen,ship,aliens)
 
+    stats = GameStats(ai_settings)
+
     while True:
 
         gf.check_events(ai_settings,screen,ship,bullets)
-        ship.update()
-        gf.update_bullets(ai_settings, aliens,screen, ship,bullets)
-        gf.update_aliens(ai_settings,aliens)
+        if stats.game_active:
+            ship.update()
+            gf.update_bullets(ai_settings, aliens,screen, ship,bullets)
+            gf.update_aliens(ai_settings,stats,screen,ship,aliens,bullets)
+
         gf.update_screen(ai_settings,screen,ship,aliens,bullets)
 
 run_game()
